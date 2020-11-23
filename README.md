@@ -1,1 +1,1 @@
-# XrmToolBox_BulkUpdateWorkHours
+# XrmToolBox - Bulk Update Work Hours
