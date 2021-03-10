@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -477,6 +477,7 @@ namespace BulkUpdateWorkHours
 
                     Entity newInnerCalendar = new Entity("calendar");
                     newInnerCalendar.Attributes["businessunitid"] = new EntityReference("businessunit", ((EntityReference)(userCalendarEntity["businessunitid"])).Id);
+                    newInnerCalendar.Attributes["type"] = new OptionSetValue(-1);
                     Guid innerCalendarId = organizationService.Create(newInnerCalendar);
 
                     //Create a new calendar rule and assign the inner calendar id to it
@@ -496,7 +497,7 @@ namespace BulkUpdateWorkHours
                     //Assign all the calendar rule back to the user calendar
                     userCalendarEntity.Attributes["calendarrules"] = calendarRules;
                     //Please refer to here for Calander Types https://msdn.microsoft.com/en-us/library/dn689038.aspx
-                    userCalendarEntity.Attributes["type"] = new OptionSetValue(-1);
+                    userCalendarEntity.Attributes["type"] = new OptionSetValue(0);
                     organizationService.Update(userCalendarEntity);
 
                     //Creates a new Calendar Rule 
@@ -528,6 +529,7 @@ namespace BulkUpdateWorkHours
 
                     Entity newInnerCalendar = new Entity("calendar");
                     newInnerCalendar.Attributes["businessunitid"] = new EntityReference("businessunit", ((EntityReference)(userCalendarEntity["businessunitid"])).Id);
+                    newInnerCalendar.Attributes["type"] = new OptionSetValue(-1);
                     Guid innerCalendarId = organizationService.Create(newInnerCalendar);
 
                     //Create a new calendar rule and assign the inner calendar id to it
@@ -547,7 +549,7 @@ namespace BulkUpdateWorkHours
                     //Assign all the calendar rule back to the user calendar
                     userCalendarEntity.Attributes["calendarrules"] = calendarRules;
                     //Please refer to here for Calander Types https://msdn.microsoft.com/en-us/library/dn689038.aspx
-                    userCalendarEntity.Attributes["type"] = new OptionSetValue(-1);
+                    userCalendarEntity.Attributes["type"] = new OptionSetValue(0);
                     organizationService.Update(userCalendarEntity);
 
                     //Creates a new Calendar Rule 
