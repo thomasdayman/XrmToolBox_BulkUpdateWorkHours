@@ -1,4 +1,4 @@
-﻿namespace BulkUpdateWorkHours
+namespace BulkUpdateWorkHours
 {
     partial class MyPluginControl
     {
@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MyPluginControl));
             this.userList = new System.Windows.Forms.CheckedListBox();
             this.getUsers = new System.Windows.Forms.Button();
             this.workDayBox = new System.Windows.Forms.GroupBox();
@@ -102,6 +103,9 @@
             this.calendarTypesBox = new System.Windows.Forms.ComboBox();
             this.capacityLabel = new System.Windows.Forms.Label();
             this.capacityValue = new System.Windows.Forms.NumericUpDown();
+            this.bookableResourceFetchXML = new System.Windows.Forms.GroupBox();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.bookableResourceFetchXMLValue = new System.Windows.Forms.RichTextBox();
             this.workDayBox.SuspendLayout();
             this.workHours.SuspendLayout();
             this.varyByDayBox.SuspendLayout();
@@ -110,6 +114,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.everyXWeeks)).BeginInit();
             this.Capacity.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.capacityValue)).BeginInit();
+            this.bookableResourceFetchXML.SuspendLayout();
             this.SuspendLayout();
             // 
             // userList
@@ -144,7 +149,7 @@
             this.workDayBox.Controls.Add(this.tue);
             this.workDayBox.Controls.Add(this.mon);
             this.workDayBox.Controls.Add(this.sun);
-            this.workDayBox.Location = new System.Drawing.Point(303, 281);
+            this.workDayBox.Location = new System.Drawing.Point(901, 281);
             this.workDayBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.workDayBox.Name = "workDayBox";
             this.workDayBox.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -283,7 +288,7 @@
             this.workHours.Controls.Add(this.endTimeLabel);
             this.workHours.Controls.Add(this.startTimeLabel);
             this.workHours.Controls.Add(this.startTimePicker);
-            this.workHours.Location = new System.Drawing.Point(303, 568);
+            this.workHours.Location = new System.Drawing.Point(901, 568);
             this.workHours.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.workHours.Name = "workHours";
             this.workHours.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -344,7 +349,7 @@
             // selectAll
             // 
             this.selectAll.AutoSize = true;
-            this.selectAll.Location = new System.Drawing.Point(7, 66);
+            this.selectAll.Location = new System.Drawing.Point(7, 68);
             this.selectAll.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.selectAll.Name = "selectAll";
             this.selectAll.Size = new System.Drawing.Size(88, 21);
@@ -355,7 +360,7 @@
             // 
             // setWorkHours
             // 
-            this.setWorkHours.Location = new System.Drawing.Point(303, 35);
+            this.setWorkHours.Location = new System.Drawing.Point(901, 35);
             this.setWorkHours.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.setWorkHours.Name = "setWorkHours";
             this.setWorkHours.Size = new System.Drawing.Size(904, 57);
@@ -401,7 +406,7 @@
             this.varyByDayBox.Controls.Add(this.vTue);
             this.varyByDayBox.Controls.Add(this.vMon);
             this.varyByDayBox.Controls.Add(this.vSun);
-            this.varyByDayBox.Location = new System.Drawing.Point(776, 158);
+            this.varyByDayBox.Location = new System.Drawing.Point(1374, 158);
             this.varyByDayBox.Name = "varyByDayBox";
             this.varyByDayBox.Size = new System.Drawing.Size(431, 593);
             this.varyByDayBox.TabIndex = 13;
@@ -830,7 +835,7 @@
             // 
             this.groupBox2.Controls.Add(this.varySchedule);
             this.groupBox2.Controls.Add(this.sameSchedule);
-            this.groupBox2.Location = new System.Drawing.Point(303, 158);
+            this.groupBox2.Location = new System.Drawing.Point(901, 158);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(450, 117);
             this.groupBox2.TabIndex = 16;
@@ -847,7 +852,7 @@
             this.workDate.Controls.Add(this.startDatePicker);
             this.workDate.Controls.Add(this.endDatePicker);
             this.workDate.Controls.Add(this.startDateLabel);
-            this.workDate.Location = new System.Drawing.Point(303, 387);
+            this.workDate.Location = new System.Drawing.Point(901, 387);
             this.workDate.Name = "workDate";
             this.workDate.Size = new System.Drawing.Size(450, 174);
             this.workDate.TabIndex = 17;
@@ -885,7 +890,7 @@
             // clearWorkHours
             // 
             this.clearWorkHours.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.clearWorkHours.Location = new System.Drawing.Point(303, 108);
+            this.clearWorkHours.Location = new System.Drawing.Point(901, 108);
             this.clearWorkHours.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.clearWorkHours.Name = "clearWorkHours";
             this.clearWorkHours.Size = new System.Drawing.Size(904, 34);
@@ -902,7 +907,7 @@
             this.Capacity.Controls.Add(this.calendarTypesBox);
             this.Capacity.Controls.Add(this.capacityLabel);
             this.Capacity.Controls.Add(this.capacityValue);
-            this.Capacity.Location = new System.Drawing.Point(303, 705);
+            this.Capacity.Location = new System.Drawing.Point(901, 705);
             this.Capacity.Name = "Capacity";
             this.Capacity.Size = new System.Drawing.Size(450, 139);
             this.Capacity.TabIndex = 19;
@@ -981,11 +986,30 @@
             0,
             0});
             // 
+            // bookableResourceFetchXML
+            // 
+            this.bookableResourceFetchXML.Controls.Add(this.bookableResourceFetchXMLValue);
+            this.bookableResourceFetchXML.Location = new System.Drawing.Point(309, 84);
+            this.bookableResourceFetchXML.Name = "bookableResourceFetchXML";
+            this.bookableResourceFetchXML.Size = new System.Drawing.Size(569, 760);
+            this.bookableResourceFetchXML.TabIndex = 20;
+            this.bookableResourceFetchXML.TabStop = false;
+            this.bookableResourceFetchXML.Text = "Bookable Resource FetchXML";
+            // 
+            // bookableResourceFetchXMLValue
+            // 
+            this.bookableResourceFetchXMLValue.Location = new System.Drawing.Point(20, 34);
+            this.bookableResourceFetchXMLValue.Name = "bookableResourceFetchXMLValue";
+            this.bookableResourceFetchXMLValue.Size = new System.Drawing.Size(527, 709);
+            this.bookableResourceFetchXMLValue.TabIndex = 0;
+            this.bookableResourceFetchXMLValue.Text = resources.GetString("bookableResourceFetchXMLValue.Text");
+            // 
             // MyPluginControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
+            this.Controls.Add(this.bookableResourceFetchXML);
             this.Controls.Add(this.Capacity);
             this.Controls.Add(this.clearWorkHours);
             this.Controls.Add(this.workDate);
@@ -999,7 +1023,7 @@
             this.Controls.Add(this.groupBox2);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "MyPluginControl";
-            this.Size = new System.Drawing.Size(1231, 873);
+            this.Size = new System.Drawing.Size(1850, 873);
             this.Load += new System.EventHandler(this.MyPluginControl_Load);
             this.workDayBox.ResumeLayout(false);
             this.workDayBox.PerformLayout();
@@ -1015,6 +1039,7 @@
             this.Capacity.ResumeLayout(false);
             this.Capacity.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.capacityValue)).EndInit();
+            this.bookableResourceFetchXML.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1095,5 +1120,8 @@
         private System.Windows.Forms.ComboBox calendarTypesBox;
         private System.Windows.Forms.Label timeZoneLabel;
         private System.Windows.Forms.ComboBox timeZonesBox;
+        private System.Windows.Forms.GroupBox bookableResourceFetchXML;
+        private System.Windows.Forms.RichTextBox bookableResourceFetchXMLValue;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }
