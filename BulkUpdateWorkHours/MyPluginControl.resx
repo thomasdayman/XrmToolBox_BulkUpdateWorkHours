@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,4 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <metadata name="backgroundWorker1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <data name="bookableResourceFetchXMLValue.Text" xml:space="preserve">
+    <value>&lt;fetch distinct="false" mapping="logical" output-format="xml-platform" version="1.0"&gt;
+  &lt;entity name="bookableresource"&gt;
+    &lt;attribute name="name" /&gt;
+    &lt;attribute name="createdon" /&gt;
+    &lt;attribute name="resourcetype" /&gt;
+    &lt;attribute name="bookableresourceid" /&gt;
+    &lt;attribute name="calendarid" /&gt;
+    &lt;order descending="false" attribute="name" /&gt;
+  &lt;/entity&gt;
+&lt;/fetch&gt;</value>
+  </data>
 </root>
