@@ -15,6 +15,8 @@ using System.Web.UI.WebControls;
 using Ical.Net.DataTypes;
 using Microsoft.Crm.Sdk.Messages;
 using System.Globalization;
+using System.Xml.Linq;
+using System.Xml;
 
 namespace BulkUpdateWorkHours
 {
@@ -126,6 +128,112 @@ namespace BulkUpdateWorkHours
             {
                 clearUsers();
                 retrieveUsers();
+            }
+            else
+            {
+                ExecuteMethod(WhoAmI);
+            }
+        }
+
+        private void retrieveUsers()
+        {
+            try
+            {
+                string fetchxml;
+
+                if (bookableResourceFetchXMLValue.Text != string.Empty)
+                {
+                    fetchxml = bookableResourceFetchXMLValue.Text;
+                    XmlDocument formattedfetchxml = new XmlDocument();
+                    formattedfetchxml.LoadXml(fetchxml);
+                    XmlNodeList nodeList = formattedfetchxml.GetElementsByTagName("attribute");
+                    XmlNodeList entityList = formattedfetchxml.GetElementsByTagName("entity");
+
+
+                    bool att_bookablename = false;
+                    bool att_bookableresourceid = false;
+                    bool att_calendarid = false;
+                    bool entity_bookableresource = false;
+
+                    for (var i = 0; i < entityList.Count; i++)
+                    {
+                        var entityname = entityList[i].Attributes["name"].Value;
+                        switch (entityname)
+                        {
+                            case "bookableresource":
+                                entity_bookableresource = true;
+                                break;
+                            default:
+                                entity_bookableresource = false;
+                                break;
+                        }
+                    }
+
+                    for (var i = 0; i < nodeList.Count; i++)
+                    {
+                        var attributename = nodeList[i].Attributes["name"].Value;
+                        switch (attributename)
+                        {
+                            case "name":
+                                att_bookablename = true;
+                                break;
+                            case "bookableresourceid":
+                                att_bookableresourceid = true;
+                                break;
+                            case "calendarid":
+                                att_calendarid = true;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    if (entity_bookableresource == false)
+                    {
+                        MessageBox.Show("The entity name must be 'bookableresource' within the FetchXML");
+                        return;
+                    }
+                    if (att_bookablename == false)
+                    {
+                        MessageBox.Show("Please add " + "<attribute name = \"name\" /> " + "to the FetchXML query");
+                        return;
+                    }
+                    if (att_bookableresourceid == false)
+                    {
+                        MessageBox.Show("Please add " + "<attribute name = \"bookableresourceid\" /> " + "to the FetchXML query");
+                        return;
+                    }
+                    if (att_calendarid == false)
+                    {
+                        MessageBox.Show("Please add " + "<attribute name = \"calendarid\" /> " + "to the FetchXML query");
+                        return;
+                    }
+                }
+                else
+                {
+                    fetchxml = "<?xml version='1.0'?>" +
+                               "<fetch distinct='false' mapping='logical' output-format='xml-platform' version='1.0'>" +
+                               "<entity name='bookableresource'>" +
+                               "<attribute name='name'/>" +
+                               "<attribute name='createdon'/>" +
+                               "<attribute name='resourcetype'/>" +
+                               "<attribute name='bookableresourceid'/>" +
+                               "<attribute name='calendarid'/>" +
+                               "<order descending='false' attribute='name'/>" +
+                               "</entity>" +
+                               "</fetch>";
+
+                    XDocument formattedfetchxml = XDocument.Parse(fetchxml);
+                    bookableResourceFetchXMLValue.AppendText(formattedfetchxml.ToString());
+                }
+                EntityCollection result = Service.RetrieveMultiple(new FetchExpression(fetchxml));
+
+                foreach (var c in result.Entities)
+                {
+                    var calendarid = ((EntityReference)c.Attributes["calendarid"]).Id;
+                    var bookableresourceid = ((Guid)c.Attributes["bookableresourceid"]);
+                    var bookablename = ((string)c.Attributes["name"]);
+                    userList.Items.Add(new BookableResourceInfo { BookableName = bookablename, BookableGUID = bookableresourceid, CalendarID = calendarid });
+                }
 
                 if (userList.Items.Count == 0)
                 {
@@ -136,36 +244,9 @@ namespace BulkUpdateWorkHours
                     getTimeZones();
                 }
             }
-            else
+            catch (Exception ex)
             {
-                ExecuteMethod(WhoAmI);
-            }
-        }
-
-        private void retrieveUsers()
-        {
-            string fetchxml = "<?xml version='1.0'?>" +
-                                        "<fetch distinct='false' mapping='logical' output-format='xml-platform' version='1.0'>" +
-                                        "<entity name='bookableresource'>" +
-                                        "<attribute name='name'/>" +
-                                        "<attribute name='createdon'/>" +
-                                        "<attribute name='resourcetype'/>" +
-                                        "<attribute name='bookableresourceid'/>" +
-                                        "<attribute name='calendarid'/>" +
-                                        "<order descending='false' attribute='name'/>" +
-                                        "</entity>" +
-                                        "</fetch>";
-
-            EntityCollection result = Service.RetrieveMultiple(new FetchExpression(fetchxml));
-
-            Console.WriteLine("There are {0} entities found", result.Entities.Count);
-
-            foreach (var c in result.Entities)
-            {
-                var calendarid = ((EntityReference)c.Attributes["calendarid"]).Id;
-                var bookableresourceid = ((Guid)c.Attributes["bookableresourceid"]);
-                var bookablename = ((string)c.Attributes["name"]);
-                userList.Items.Add(new BookableResourceInfo { BookableName = bookablename, BookableGUID = bookableresourceid, CalendarID = calendarid});
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -777,6 +858,7 @@ namespace BulkUpdateWorkHours
                 timeZonesBox.Items.Add(new timeZone { Name = name, Code = code });
                 timeZonesBox.DisplayMember = Name;
             }
+            timeZonesBox.ResetText();
 
             return timeZonesList;
         }
